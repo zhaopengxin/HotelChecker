@@ -1,1 +1,1 @@
-# HotelChecker
+# Hotels Checker
