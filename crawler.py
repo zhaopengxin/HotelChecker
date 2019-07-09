@@ -26,21 +26,26 @@ def record(msg):
 
 
 def alter_me(subject, msg):
-    record("发送邮件成功开始")
+    record("发送邮件开始")
     record("内容：" + msg)
-    msg = time.strftime("%Y-%m-%d-%H:%M:%S ", time.localtime()) + msg
-    mailserver = "smtp.126.com"  # 邮箱服务器地址
-    username_send = 'zhaopengxin@126.com'  # 邮箱用户名
-    password = 'Jim88757167'  # 邮箱密码：需要使用授权码
-    username_recv = 'zhaopengxin@126.com'  # 收件人，多个收件人用逗号隔开
-    mail = MIMEText(msg, 'plain', 'utf-8')
-    mail['Subject'] = subject
-    mail['From'] = username_send  # 发件人
-    mail['To'] = username_recv  # 收件人；[]里的三个是固定写法，别问为什么，我只是代码的搬运工
-    smtp = smtplib.SMTP(mailserver, port=25)  # 连接邮箱服务器，smtp的端口号是25
-    smtp.login(username_send, password)  # 登录邮箱
-    smtp.sendmail(username_send, username_recv, mail.as_string())  # 参数分别是发送者，接收者，第三个是把上面的发送邮件的内容变成字符串
-    smtp.quit()  # 发送完毕后退出smtp
+    try:
+        msg = time.strftime("%Y-%m-%d-%H:%M:%S ", time.localtime()) + msg
+        mailserver = "smtp.126.com"  # 邮箱服务器地址
+        username_send = 'zhaopengxin@126.com'  # 邮箱用户名
+        password = 'Jim88757167'  # 邮箱密码：需要使用授权码
+        username_recv = 'zhaopengxin@126.com'  # 收件人，多个收件人用逗号隔开
+        mail = MIMEText(msg, 'plain', 'utf-8')
+        mail['Subject'] = subject
+        mail['From'] = username_send  # 发件人
+        mail['To'] = username_recv  # 收件人；[]里的三个是固定写法，别问为什么，我只是代码的搬运工
+        smtp = smtplib.SMTP(mailserver, port=25)  # 连接邮箱服务器，smtp的端口号是25
+        smtp.login(username_send, password)  # 登录邮箱
+        smtp.sendmail(username_send, username_recv, mail.as_string())  # 参数分别是发送者，接收者，第三个是把上面的发送邮件的内容变成字符串
+        smtp.quit()  # 发送完毕后退出smtp
+    except Exception as e:
+        msg = "失败原因: {0}".format(e)
+        record("邮件发送失败," + msg)
+        return
     record("邮件成功发送")
 
 
@@ -48,7 +53,7 @@ def search_avail_room():
     global iteration_count
     global room_avail_num_map
 
-    iteration_count = (iteration_count + 1) % 100   # range from [0 - 99]
+    iteration_count = (iteration_count + 1) % 30   # range from [0 - 29]
     if iteration_count == 1:
         alter_me("心跳包", time.strftime("%Y-%m-%d-%H:%M:%S 还活着", time.localtime()))
     record("第{0}次迭代周期开始".format(iteration_count))
